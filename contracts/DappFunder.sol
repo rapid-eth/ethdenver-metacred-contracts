@@ -8,6 +8,7 @@ contract DappFunder is owned {
     using ECDSA for bytes32;
 
     mapping (address => bool) public signerDelegates;
+    mapping (address => string) public metaFunction;
 
     bool public stopped;
 
@@ -32,13 +33,18 @@ contract DappFunder is owned {
         mtx.data) = abi.decode(encodedMetaTX, (address,bytes));
 
         //execute transaction
-        (bool worked,) = mtx.processor.call(abi.encodeWithSignature("proxy(bytes)",mtx.data));
+        (bool worked,) = mtx.processor.call(abi.encodeWithSignature(metaFunction[mtx.processor],mtx.data));
         require(worked, "did not work");
 
         emit TransactionRelayed(msg.sender, mtx.processor);
         uint gasRemain = gasleft();
         uint gasRefund = ((startGasLeft - gasRemain)*tx.gasprice) + 638080000000000; //TODO?
         msg.sender.transfer(gasRefund);
+    }
+
+    function addMetaContract(address _contract, string memory _functionSignature) public {
+        require(msg.sender == owner || signerDelegates[msg.sender], "not allowed");
+        metaFunction[_contract] = _functionSignature;
     }
     
     function stop() public onlyOwner {
