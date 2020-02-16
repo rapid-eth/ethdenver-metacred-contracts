@@ -23,6 +23,8 @@ contract DappFunder is owned {
     function executeMetaTransaction(bytes memory encodedMetaTX, bytes memory sig) public {
         uint startGasLeft = gasleft();
 
+        uint256 txBytesLen = encodedMetaTX.length;
+
         require(!stopped, "contract is stopped");
 
         //verify sig here
@@ -38,7 +40,7 @@ contract DappFunder is owned {
 
         emit TransactionRelayed(msg.sender, mtx.processor);
         uint gasRemain = gasleft();
-        uint gasRefund = ((startGasLeft - gasRemain)*tx.gasprice) + 638080000000000; //TODO?
+        uint gasRefund = ((startGasLeft - gasRemain + (96 * txBytesLen / 10) + 27000)*tx.gasprice); // TODO - refine this
         msg.sender.transfer(gasRefund);
     }
 
@@ -55,14 +57,22 @@ contract DappFunder is owned {
         stopped = false;
     }
 
-    function encodeMetaTransction(address _processor, bytes memory data) public pure returns (bytes memory) {
+    function toggleDelegate(address _delegate, bool _isDelegate) public onlyOwner {
+        signerDelegates[_delegate] = _isDelegate;
+    }
+
+    function abiEncodeMetaTransction(address _processor, bytes memory data) public pure returns (bytes memory) {
         return abi.encode(_processor, data);
+    }
+
+
+    function encodeMetaTransction(address _processor, bytes memory data) public pure returns (bytes32) {
+        return keccak256(abi.encode(_processor, data));
     }
 
     function getMTX(bytes memory encodedMetaTX) public pure returns (MetaTransaction memory mtx) {
         (mtx.processor,
         mtx.data) = abi.decode(encodedMetaTX, (address,bytes));
-
     }
 
     function verifySignature(bytes32 _encodedMetaHash, bytes memory signature) internal view returns (bool) {

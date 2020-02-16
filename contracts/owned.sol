@@ -8,7 +8,7 @@ contract owned {
     }
 
     modifier onlyOwner() virtual {
-        require(msg.sender != owner, "onlyOwner");
+        require(msg.sender == owner, "onlyOwner");
         _;
     }
 

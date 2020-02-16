@@ -29,14 +29,19 @@ const main = async () => {
     let balanceBefore = await provider.getBalance(otherAccount.address)
     console.log("Balance: "+balanceBefore)
 
-    // let mtx = await createMetaTx()
-    let mtx = await createLongerMetaTx()
+    let mtx = await createMetaTx()
+    // let mtx = await createLongerMetaTx()
     // console.log(mtx)
 
     let dataToSign = await dappFunderContract.encodeMetaTransction(metaproxyContract.address, mtx)
     let sig = await dappDevAccount.signMessage(ethers.utils.arrayify(dataToSign))
 
-
+    // console.log("SIG: " + sig)
+    // let encodedMTX = dappFunderContract.encodeMetaTransction(metaproxyAddress, mtxData)
+    // const con = dappFunderContract.connect(deployAccount)
+    // let r = await con.getMTX(encodedMTX)
+    // console.log(r)
+    // let tx = await con.executeMetaTransaction(encodedMTX, dummysig, {gasLimit:5000000})
 
     let relayerConnection = dappFunderContract.connect(otherAccount)
     let abiMTX = await dappFunderContract.abiEncodeMetaTransction(metaproxyContract.address, mtx)
@@ -44,8 +49,7 @@ const main = async () => {
     console.log(tx)
     let balanceAfter = await provider.getBalance(otherAccount.address)
     console.log("Balance: "+balanceAfter)
-    let diff = balanceBefore.sub(balanceAfter);
-    console.log("Diff: "+diff)
+    console.log("Diff: "+balanceBefore.sub(balanceAfter))
     console.log("Diff Div: "+balanceBefore.sub(balanceAfter).div(tx.gasPrice))
 
     let metaDAOMembers = await miniDAOContract.totalMembers()
@@ -53,6 +57,14 @@ const main = async () => {
 
     let member = await miniDAOContract.members(endUserAccount.address)
     console.log("is Member: " + member)
+
+    let g1 = await dappFunderContract.gas1()
+    console.log("gas: " + g1)
+    console.log("gas: " + g1.sub(5000000))
+
+
+    let len1 = await dappFunderContract.len1()
+    console.log("len: " + len1)
 
 }
 
@@ -69,7 +81,7 @@ const createLongerMetaTx = async () => {
     console.log("Creating meta transaction...")
 
     let metaMiniContract = miniDAOContract.connectMeta(endUserAccount.toMetaWallet())
-    let mtx = await metaMiniContract.submitProposal("hello")
+    let mtx = await metaMiniContract.submitProposal("hello CreatingCreatingCreatingCreatingCreatingCreatingCreatingCreatingCreatingCreatingCreatingCreatingCreatingCreatingCreatingCreatingCreatingCreatingCreating")
 
     return mtx
 }

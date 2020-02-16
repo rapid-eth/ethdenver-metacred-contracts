@@ -1,7 +1,7 @@
 require('module-alias/register')
 
 // const ethers = require("../../meta-lib").ethers;
-const ethers = require('ethers')
+const ethers = require('meta-ethers').ethers
 //uncomment and run `npm install ipfs-http-client` to use IPFS
 //const ipfs = require("./ipfs");
 const misc = require("./misc");
