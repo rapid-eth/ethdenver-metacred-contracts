@@ -58,14 +58,6 @@ const main = async () => {
     let member = await miniDAOContract.members(endUserAccount.address)
     console.log("is Member: " + member)
 
-    let g1 = await dappFunderContract.gas1()
-    console.log("gas: " + g1)
-    console.log("gas: " + g1.sub(5000000))
-
-
-    let len1 = await dappFunderContract.len1()
-    console.log("len: " + len1)
-
 }
 
 const createMetaTx = async () => {

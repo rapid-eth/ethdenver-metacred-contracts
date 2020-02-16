@@ -29,8 +29,8 @@ const main = async () => {
     let balanceBefore = await provider.getBalance(otherAccount.address)
     console.log("Balance: "+balanceBefore)
 
-    // let mtx = await createMetaTx()
-    let mtx = await createLongerMetaTx()
+    let mtx = await createMetaTx()
+    // let mtx = await createLongerMetaTx()
     // console.log(mtx)
 
     let dataToSign = await dappFunderContract.encodeMetaTransction(metaproxyContract.address, mtx)
