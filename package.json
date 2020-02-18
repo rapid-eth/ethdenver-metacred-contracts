@@ -6,7 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "./untruffle/compile.sh; node ./untruffle/buildContractJSON.js",
-    "deploy": "node ./deploy"
+    "deploy": "node ./deploy",
+    "addresses": "node task/printAddresses.js",
+    "dummy": "node task/dummySigner.js"
+    
   },
   "author": "JoeBernitt",
   "license": "ISC",

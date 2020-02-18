@@ -1,26 +1,18 @@
-require('module-alias/register')
 
-const utils = require('@utils');
-const ethers = utils.ethers
-const provider = utils.provider
-
-
-const dappFunderContract = utils.getDeployedContract('DappFunder')
-const metaproxyContract = utils.getDeployedContract('MetaProxy')
-const miniDAOContract = utils.getDeployedContract('MetaMiniDAO')
-
-const deployAccount = utils.ethersAccount(0)
-const otherAccount = utils.ethersAccount(1)
-const altAccount = utils.ethersAccount(2)
-const certAccount = utils.ethersAccount(3)
-
-let DDA_PK = ethers.utils.id("dapp dev")
-let EU_PK = ethers.utils.id("end user")
-let dappDevAccount = new ethers.Wallet(DDA_PK, provider)
-let endUserAccount = new ethers.Wallet(EU_PK, provider)
-
+const {
+    ethers,
+    provider,
+    dappFunderContract,
+    metaProxyContract,
+    miniDAOContract,
+    deployAccount,
+    otherAccount,
+    dappDevAccount,
+    endUserAccount
+} = require('./global')
 
 const main = async () => {
+
     console.log("Running Main Task...")
 
     let contractBalance = await provider.getBalance(dappFunderContract.address)
@@ -33,15 +25,23 @@ const main = async () => {
     // let mtx = await createLongerMetaTx()
     // console.log(mtx)
 
-    let dataToSign = await dappFunderContract.encodeMetaTransction(metaproxyContract.address, mtx)
+    let dataToSign = await dappFunderContract.encodeMetaTransction(metaProxyContract.address, mtx)
+
+    let abicoder = ethers.utils.defaultAbiCoder
+
+    let dts = abicoder.encode(["address","bytes"],[metaProxyContract.address, mtx])
+    console.log()
+    console.log(dts)
     let sig = await dappDevAccount.signMessage(ethers.utils.arrayify(dataToSign))
 
-
-
     let relayerConnection = dappFunderContract.connect(otherAccount)
-    let abiMTX = await dappFunderContract.abiEncodeMetaTransction(metaproxyContract.address, mtx)
+    let abiMTX = await dappFunderContract.abiEncodeMetaTransction(metaProxyContract.address, mtx)
+    console.log(abiMTX)
+
+    process.exit()
+
     let tx = await relayerConnection.executeMetaTransaction(abiMTX, sig, {gasLimit: 5000000})
-    console.log(tx)
+
     let balanceAfter = await provider.getBalance(otherAccount.address)
     console.log("Balance: "+balanceAfter)
     let diff = balanceBefore.sub(balanceAfter);

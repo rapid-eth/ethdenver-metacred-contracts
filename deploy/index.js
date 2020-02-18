@@ -16,15 +16,11 @@ const deployRinkeby = async () => {
 
 const deployLocal = async () => {
 
-
     const metaproxy = await utils.deployContractAndWriteToFile('MetaProxy', deployAccount, [])
     console.log("MetaProxy deployed at address: " + metaproxy.address)
 
-
     const dappFunder = await utils.deployContractAndWriteToFile('DappFunder', deployAccount, [])
     console.log("Con deployed at address: " + dappFunder.address)
-
-
 
     const metaMiniDAO = await utils.deployContractAndWriteToFile('MetaMiniDAO', deployAccount, [metaproxy.address])
     console.log("metaMiniDAO deployed at address: " + metaMiniDAO.address)

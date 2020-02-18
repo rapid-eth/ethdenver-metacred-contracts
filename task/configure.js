@@ -1,25 +1,11 @@
-require('module-alias/register')
-
-const utils = require('@utils');
-const ethers = utils.ethers
-const provider = utils.provider
-
-
-const dappFunderContract = utils.getDeployedContract('DappFunder')
-const metaproxyContract = utils.getDeployedContract('MetaProxy')
-const miniDAOContract = utils.getDeployedContract('MetaMiniDAO')
-
-
-const deployAccount = utils.ethersAccount(0)
-const otherAccount = utils.ethersAccount(1)
-const altAccount = utils.ethersAccount(2)
-const certAccount = utils.ethersAccount(3)
-
-let DDA_PK = ethers.utils.id("dapp dev")
-let EU_PK = ethers.utils.id("end user")
-
-let dappDevAccount = new ethers.Wallet(DDA_PK, provider)
-let endUserAccount = new ethers.Wallet(EU_PK, provider)
+const {
+    ethers,
+    dappFunderContract,
+    metaProxyContract,
+    miniDAOContract,
+    deployAccount,
+    dappDevAccount,
+} = require('./global')
 
 const main = async () => {
     console.log("Running Configure...")
@@ -43,7 +29,7 @@ const main = async () => {
     let tx2 = await funderContract.toggleDelegate(dappDevAccount.address, true)
 
     //configure metaproxy address and function signature
-    let tx3 = await funderContract.addMetaContract(metaproxyContract.address, "proxy(bytes)")
+    let tx3 = await funderContract.addMetaContract(metaProxyContract.address, "proxy(bytes)")
 
 }
 

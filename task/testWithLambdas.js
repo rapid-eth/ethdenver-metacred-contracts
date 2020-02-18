@@ -1,29 +1,22 @@
-require('module-alias/register')
-
-const utils = require('@utils');
-const ethers = utils.ethers
-const provider = utils.provider
 
 const axios = require('axios');
 
-
-const dappFunderContract = utils.getDeployedContract('DappFunder')
-const metaproxyContract = utils.getDeployedContract('MetaProxy')
-const miniDAOContract = utils.getDeployedContract('MetaMiniDAO')
-
-const deployAccount = utils.ethersAccount(0)
-const otherAccount = utils.ethersAccount(1)
-const altAccount = utils.ethersAccount(2)
-const certAccount = utils.ethersAccount(3)
-
-let DDA_PK = ethers.utils.id("dapp dev")
-let EU_PK = ethers.utils.id("end user12")
-let dappDevAccount = new ethers.Wallet(DDA_PK, provider)
-let endUserAccount = new ethers.Wallet(EU_PK, provider)
-
+const {
+    ethers,
+    provider,
+    dappFunderContract,
+    metaProxyContract,
+    miniDAOContract,
+    deployAccount,
+    otherAccount,
+    dappDevAccount,
+    endUserAccount
+} = require('./global')
 
 const main = async () => {
     console.log("Running Main Task...")
+
+    console.log(dappDevAccount)
 
     let memberBefore = await miniDAOContract.members(endUserAccount.address)
     console.log("is MemberBefore: " + memberBefore)
@@ -42,13 +35,13 @@ const main = async () => {
     let res = await sendLambdaRequest(lambadurl, {metaTx: mtx} )
     console.log(res.data)
 
-    let dataToSign = await dappFunderContract.encodeMetaTransction(metaproxyContract.address, mtx)
-    console.log("dataToSign",dataToSign)
+    // let dataToSign = await dappFunderContract.encodeMetaTransction(metaproxyContract.address, mtx)
+    // console.log("dataToSign",dataToSign)
     let abiMTX = await dappFunderContract.abiEncodeMetaTransction(metaproxyContract.address, mtx)
     console.log("abiMTX",abiMTX)
 
-    let sig2 = await dappDevAccount.signMessage(ethers.utils.arrayify(dataToSign))
-    console.log("SIG: " + sig2)
+    // let sig2 = await dappDevAccount.signMessage(ethers.utils.arrayify(dataToSign))
+    // console.log("SIG: " + sig2)
     console.log("dappDevAccount.address: " +  dappDevAccount.address)
     // // Submit mtx + signature to Relayer Lambda
     let sig = res.data.signature
