@@ -14,7 +14,7 @@
   "author": "JoeBernitt",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "ethers": "^4.0.44",
     "meta-ethers": "rapid-eth/meta-ethers",
     "module-alias": "^2.2.2"
